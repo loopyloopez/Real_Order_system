@@ -11,6 +11,7 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/",(req,res)=>{
     res.send("<h1> server is up<h1>")
+    console.log(req);
     
 })
 app.post("/new",(req,res)=>{
