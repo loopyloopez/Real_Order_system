@@ -15,12 +15,12 @@ app.get("/",(req,res)=>{
     
 })
 
-app.post("/",(req,res)=>{
+app.post("/neww",(req,res)=>{
   console.log(req.body.name);
   res.send("found");
   
 })
-app.post("/neww",(req,res)=>{
+app.post("/new",(req,res)=>{
     console.log(req.body);
     res.send("<h1>Thank you <h1>");
    
