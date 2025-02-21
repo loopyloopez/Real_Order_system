@@ -14,5 +14,13 @@
     "axios": "^1.7.9",
     "express": "^4.21.2",
     "npx": "^10.2.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loopyloopez/Real_Order_system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/loopyloopez/Real_Order_system/issues"
+  },
+  "homepage": "https://github.com/loopyloopez/Real_Order_system#readme"
 }

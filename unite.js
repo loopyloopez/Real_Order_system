@@ -15,7 +15,7 @@ app.post("/new",(req,res)=>{
     const content = req.body["name"] + "\n" +req.body["email"] + "\n" + req.body["orderDetails"] + "\n" + req.body["totalPrice"] + "\n";
     console.log(content);
     console.log("ordered received");
-    axios.post('http://192.168.1.229:3000/neww', {
+    axios.post('http://192.168.1.200:3000/neww', {
         firstName: req.body["name"],
         email: req.body["email"], OrderDetails:req.body["orderDetails"], totalPrice:req.body["totalPrice"]
       })
@@ -31,6 +31,6 @@ app.post("/new",(req,res)=>{
 
 })
 
-app.listen(port,()=>{
+app.listen(port,'0.0.0.0',()=>{
     console.log("lestening on port 8000");
 })
