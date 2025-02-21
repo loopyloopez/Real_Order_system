@@ -2,10 +2,10 @@ import express from "express"
 import axios from "axios"
 import bodyParser from "body-parser";
 const port = 8000;
-app.use(bodyParser.urlencoded({ extended: true }));
 
 const app = express();
 
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
