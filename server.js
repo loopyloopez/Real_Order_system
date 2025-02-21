@@ -15,8 +15,11 @@ app.get("/",(req,res)=>{
     
 })
 
-
 app.post("/new",(req,res)=>{
+  console.log(req.body.name);
+  res.send("thanks");
+})
+app.post("/neww",(req,res)=>{
     console.log(req.body);
     res.send("<h1>Thank you <h1>");
    

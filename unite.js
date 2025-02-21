@@ -15,6 +15,16 @@ app.post("/new",(req,res)=>{
     const content = req.body["name"] + "\n" +req.body["email"] + "\n" + req.body["orderDetails"] + "\n" + req.body["totalPrice"] + "\n";
     console.log(content);
     console.log("ordered received");
+    axios.post('/new', {
+        firstName: req.body["name"],
+        email: req.body["email"], OrderDetails:req.body["orderDetails"], totalPrice:req.body["totalPrice"]
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
 
 
