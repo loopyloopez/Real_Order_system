@@ -13,7 +13,8 @@ app.post("/new",(req,res)=>{
 
     res.send("thank you");
     const content = req.body["name"] + "\n" +req.body["email"] + "\n" + req.body["orderDetails"] + "\n" + req.body["totalPrice"] + "\n";
-    console.log(content);
+    console.log(req.body["name"]);
+    console.log("ordered received");
 
 
 
