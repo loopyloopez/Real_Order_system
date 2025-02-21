@@ -1,4 +1,4 @@
-import express from "express"
+import express, { json } from "express"
 import bodyParser from "body-parser";
 import fs from "fs";
 const Express = express()
@@ -16,7 +16,8 @@ app.get("/",(req,res)=>{
 })
 
 app.post("/neww",(req,res)=>{
-  console.log(req.body.name);
+  console.log(req.body);
+  console.log("something received")
   res.send("found");
   
 })

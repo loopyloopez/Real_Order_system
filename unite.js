@@ -6,7 +6,7 @@ const port = 8000;
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(express.json());
 
 
 app.post("/new",(req,res)=>{
@@ -20,7 +20,7 @@ app.post("/new",(req,res)=>{
         email: req.body["email"], OrderDetails:req.body["orderDetails"], totalPrice:req.body["totalPrice"]
       })
       .then(function (response) {
-        console.log(response);
+        console.log("sent");
       })
       .catch(function (error) {
         console.log(error);
