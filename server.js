@@ -14,14 +14,16 @@ app.get("/",(req,res)=>{
     console.log(req);
     
 })
+
+
 app.post("/new",(req,res)=>{
     console.log(req.body);
     res.send("<h1>Thank you <h1>");
    
     const content = req.body["name"] + "\n" +req.body["email"] + "\n" + req.body["orderDetails"] + "\n" + req.body["totalPrice"] + "\n";
-    console.log(typeof content);
+    
     //making order txt file
-    fs.writeFile('/Users/ericklopez/Documents/Anitas_server/Real_Order_system/orders/order' + orderID +  '.txt', content, err => {
+    fs.writeFile('orders/order' + orderID +  '.txt', content, err => {
         if (err) {
           console.error(err);
         } else {
@@ -30,7 +32,7 @@ app.post("/new",(req,res)=>{
       });
 
      //writing total for python file to read 
-    fs.writeFile('/Users/ericklopez/Documents/Anitas_server/Real_Order_system/orders/total.txt', orderID.toString(), err => {
+    fs.writeFile('orders/total.txt', orderID.toString(), err => {
         if (err) {
           console.error(err);
         } else {
