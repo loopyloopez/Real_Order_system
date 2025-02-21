@@ -48,7 +48,7 @@ app.post("/neww",(req,res)=>{
 
 
 
-app.listen(port,() =>{
+app.listen(port,'0.0.0.0',() =>{
     console.log("lestining on port" + port.toString());
 
 })
