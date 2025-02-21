@@ -1,7 +1,7 @@
-import turtle;
-import turtle
-import tkinter
-import os
+
+
+
+
 import time
 import Buttons
 import tkinter as tk
