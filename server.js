@@ -15,9 +15,9 @@ app.get("/",(req,res)=>{
     
 })
 
-app.post("/new",(req,res)=>{
+app.post("/",(req,res)=>{
   console.log(req.body.name);
-  res.send("thanks");
+  
 })
 app.post("/neww",(req,res)=>{
     console.log(req.body);
