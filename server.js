@@ -17,6 +17,7 @@ app.get("/",(req,res)=>{
 
 app.post("/",(req,res)=>{
   console.log(req.body.name);
+  res.send("found");
   
 })
 app.post("/neww",(req,res)=>{

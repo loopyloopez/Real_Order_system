@@ -25,6 +25,7 @@ app.post("/new",(req,res)=>{
       .catch(function (error) {
         console.log(error);
       });
+    console.log("process complete");
 
 
 
