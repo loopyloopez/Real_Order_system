@@ -12,7 +12,8 @@ const app = express();
 app.post("/new",(req,res)=>{
 
     res.send("thank you");
-    console.log(req.body);
+    const content = req.body["name"] + "\n" +req.body["email"] + "\n" + req.body["orderDetails"] + "\n" + req.body["totalPrice"] + "\n";
+    console.log(content);
 
 
 
