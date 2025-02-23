@@ -1,13 +1,16 @@
 import express from "express"
 import axios from "axios"
 import bodyParser from "body-parser";
-const port = 8000;
+const port = 5000;
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.get("",(req,res)=>{
+  res.send("server up");
+})
 
 app.post("/new",(req,res)=>{
 
@@ -32,5 +35,5 @@ app.post("/new",(req,res)=>{
 })
 
 app.listen(port,'0.0.0.0',()=>{
-    console.log("lestening on port 8000");
+    console.log("lestening on port 5000");
 })

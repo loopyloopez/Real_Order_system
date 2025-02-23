@@ -1,6 +1,7 @@
 import express, { json } from "express"
 import bodyParser from "body-parser";
 import fs from "fs";
+
 const Express = express()
 
 const app = express();
@@ -9,20 +10,16 @@ var orderID =1;
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.get("/",(req,res)=>{
+app.get("/new",(req,res)=>{
     res.send("<h1> server is up<h1>")
-    console.log(req);
+    console.log("device connected");
     
 })
 
-app.post("/neww",(req,res)=>{
-  console.log(req.body);
-  console.log("something received")
-  res.send("found");
-  
-})
 app.post("/new",(req,res)=>{
     console.log(req.body);
+    console.log("order received");
+    
     res.send("<h1>Thank you <h1>");
    
     const content = req.body["name"] + "\n" +req.body["email"] + "\n" + req.body["orderDetails"] + "\n" + req.body["totalPrice"] + "\n";
@@ -44,7 +41,7 @@ app.post("/new",(req,res)=>{
           // file written successfully
         }
       });
-    orderID ++;
+    orderID ++; 
 
 })
 
@@ -54,5 +51,6 @@ app.listen(port,'0.0.0.0',() =>{
     console.log("lestining on port" + port.toString());
 
 })
+
 
 
