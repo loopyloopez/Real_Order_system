@@ -1,19 +1,22 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox, simpledialog, scrolledtext
 from easygui import *
 import smtplib
 import pygame
 from datetime import datetime
 from pathlib import Path
+import datetime as dt
+import subprocess
 
 class make_button:
-    def __init__(self, pos):
+    def __init__(self, pos,root):
+        self.root = root
         self.Clocked = []
         if pos == 0:
             self.frame = tk.Frame(borderwidth=2, relief="groove")
             self.frame.pack(padx=10, pady=20)
             self.s = tk.Button( self.frame,
-                    text=f'+', 
+                    text=f'💾', 
                     command=self.regester,
                     activebackground="yellow", 
                     activeforeground="yellow",
@@ -22,7 +25,7 @@ class make_button:
                     cursor="hand2",
                     disabledforeground="yellow",
                     fg="black",
-                    font=("Arial", 12),
+                    font=("Arial", 15),
                     height=1,
                     highlightbackground="yellow",
                     highlightcolor="yellow",
@@ -36,19 +39,19 @@ class make_button:
             self.s.grid(column=0, row=3) 
 
             self.sys = tk.Button( self.frame,
-                    text=f'clock in/out', 
+                    text='💼', 
                     command=self.clock,
-                    activebackground="blue", 
-                    activeforeground="blue",
+                    activebackground="pink", 
+                    activeforeground="pink",
                     bd=3,
-                    bg="blue",
+                    bg="pink",
                     cursor="hand2",
-                    disabledforeground="blue",
+                    disabledforeground="pink",
                     fg="black",
-                    font=("Arial", 12),
+                    font=("Arial", 15),
                     height=1,
-                    highlightbackground="blue",
-                    highlightcolor="blue",
+                    highlightbackground="pink",
+                    highlightcolor="white",
                     highlightthickness=2,
                     justify="left",
                     overrelief="raised",
@@ -57,8 +60,10 @@ class make_button:
                     width=10,
                     wraplength=100)
             self.sys.grid(column=1, row=3,rowspan=3) 
+
+
             self.logs = tk.Button( self.frame,
-                    text="LOGS", 
+                    text="🔎", 
                     command=self.checklogs,
                     activebackground="orange", 
                     activeforeground="orange",
@@ -66,11 +71,11 @@ class make_button:
                     bg="orange",
                     cursor="hand2",
                     disabledforeground="orange",
-                    fg="orange",
-                    font=("Arial", 12),
+                    fg="black",
+                    font=("Arial", 15),
                     height=1,
-                    highlightbackground="orange",
-                    highlightcolor="orange",
+                    highlightbackground="black",
+                    highlightcolor="white",
                     highlightthickness=2,
                     justify="left",
                     overrelief="raised",
@@ -95,7 +100,7 @@ class make_button:
         
 
             self.button = tk.Button( self.frame,
-                        text=f'Order #{pos}',
+                        text=f'Order #{pos}\n{dt.datetime.now().strftime("%I:%M %p")}',
                         command=self.button_clicked,
                         activebackground="blue", 
                         activeforeground="white",
@@ -119,10 +124,10 @@ class make_button:
             
             self.button.grid(column=pos, row=row_pos)
             self.delete = tk.Button( self.frame,
-                        text=f'ERASE', 
+                        text=f'❌', 
                         command=self.delete_button,
                         activebackground="red", 
-                        activeforeground="red",
+                        activeforeground="black",
                         bd=3,
                         bg="red",
                         cursor="hand2",
@@ -144,7 +149,7 @@ class make_button:
             self.delete.grid(column=pos - 1, row=row_pos)
             
             self.verify = tk.Button( self.frame,
-                        text=f'Aknowledge', 
+                        text=f'📩', 
                         command=self.send_verifcation,
                         activebackground="green", 
                         activeforeground="green",
@@ -226,15 +231,14 @@ class make_button:
             
             if(newID.isalpha()):
                 messagebox.showerror("NO LETTERS!","Try again, only use numbers")
+                return
             
             
             file_path = Path(f'Tracker/{newID}')
     
             if file_path.exists():
                 messagebox.showerror("Error", f'This ID combination has already been used')
-                response = messagebox.askyesnocancel("Oh no...", "do you wanna try again?")
-                if response:
-                    return
+                
 
             else:
                 messagebox.showinfo('Good job', 'Process completed!')
@@ -242,7 +246,7 @@ class make_button:
                 with open(file_path,"w") as file:
                     file.write(f'Name:{Name}, ID:{newID}\n\n')
 
-                return
+               
         
     
 
@@ -254,8 +258,8 @@ class make_button:
         file_path = Path(f'Tracker/{ID}')
     
         if file_path.exists():
-            now = datetime.now()
-            time = now.strftime("%H:%M:%S")
+            
+            time = dt.datetime.now().strftime("%I:%M %p")
          
             now = datetime.now()
             month_name = now.strftime("%B")
@@ -269,7 +273,7 @@ class make_button:
 
                 with open(file_path,"w") as file:
                     file.write(oldinfo)
-                    file.write(f'Clocked out:{time}\n {month_name} {day_of_month}\n ------------------------------------\n')
+                    file.write(f'Clocked out-{time}\n{month_name} {day_of_month}\n------------------------------------')
                 self.Clocked.remove(ID)
             
             else:
@@ -279,11 +283,15 @@ class make_button:
 
                 days = int((len(oldinfo.split("\n")) - 2) / 5)
                 days += 1
+                if days > 7:
+                    oldinfo = oldinfo.split("\n")[0] + "\n"
+                    messagebox.showinfo('WOW', 'Account logs max reached... deleting old logs')
+                    days = 1
 
 
                 with open(file_path,"w") as file:
                     file.write(oldinfo)
-                    file.write(f'log #{days}\nClocked in:{time}\n')
+                    file.write(f'\nlog #{days}\nClocked in-{time}\n')
                 messagebox.showinfo('Hello!', 'succesfully clocked in')
                 self.Clocked.append(ID)
         
@@ -301,6 +309,8 @@ class make_button:
             with open(file_path,"r") as file:
                 oldinfo = file.read()
 
+            
+        
             messagebox.showinfo(f'#{ID} Logs', oldinfo)
             
 
@@ -309,6 +319,14 @@ class make_button:
 
         else:
             messagebox.showerror("Error", f'This ID does not exist')
+
+
+    def show_log_box(self,info):
+        text_area = scrolledtext.ScrolledText(self.root, wrap="word", width=40, height=10)
+        text_area.grid(column=0,row=0)
+        text_area.insert(tk.INSERT, info)
+
+        text_area.config(state=tk.DISABLED)
 
 
         

@@ -20,7 +20,7 @@ buttonsmade_list = []
 
 
 
-Buttons.make_button(0)
+Buttons.make_button(0,window)
 def check():
     global buttonsmade_list
     global orders
@@ -39,7 +39,7 @@ def check():
                 try:
                     with open(f'orders/order{file}.txt',"r") as txt:
                         print(f'found order {file}')
-                        Buttons.make_button(file)
+                        Buttons.make_button(file,root=window)
                         print("button made succesfully")
                         buttonsmade+= 1
                 except Exception as e:
