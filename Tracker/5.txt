@@ -1,0 +1,10 @@
+Name=erick, ID=5
+
+Clocked in-05:16 PM
+Clocked out-05:33 PM
+May 06,Hours:0.28
+total hours:0.28 
+------------------------------------
+Clocked in-05:44 PM
+
+Clocked in-05:44 PM

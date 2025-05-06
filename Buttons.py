@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog, scrolledtext
+from tkinter import messagebox, simpledialog
+from tkinter.scrolledtext import ScrolledText
 from easygui import *
 import smtplib
 import pygame
@@ -7,6 +8,8 @@ from datetime import datetime
 from pathlib import Path
 import datetime as dt
 import subprocess
+import os
+midsession = False
 
 class make_button:
     def __init__(self, pos,root):
@@ -14,9 +17,9 @@ class make_button:
         self.Clocked = []
         if pos == 0:
             self.frame = tk.Frame(borderwidth=2, relief="groove")
-            self.frame.pack(padx=10, pady=20)
+            self.frame.pack(padx=20, pady=20)
             self.s = tk.Button( self.frame,
-                    text=f'💾', 
+                    text=f'+', 
                     command=self.regester,
                     activebackground="yellow", 
                     activeforeground="yellow",
@@ -39,7 +42,7 @@ class make_button:
             self.s.grid(column=0, row=3) 
 
             self.sys = tk.Button( self.frame,
-                    text='💼', 
+                    text='✍️', 
                     command=self.clock,
                     activebackground="pink", 
                     activeforeground="pink",
@@ -55,7 +58,7 @@ class make_button:
                     highlightthickness=2,
                     justify="left",
                     overrelief="raised",
-                    padx=10,
+                    padx=15,
                     pady=20,
                     width=10,
                     wraplength=100)
@@ -63,7 +66,7 @@ class make_button:
 
 
             self.logs = tk.Button( self.frame,
-                    text="🔎", 
+                    text="LOGS", 
                     command=self.checklogs,
                     activebackground="orange", 
                     activeforeground="orange",
@@ -84,17 +87,40 @@ class make_button:
                     width=10,
                     wraplength=100)
             self.logs.grid(column=2, row=3) 
+            
+            self.reset = tk.Button( self.frame,
+                    text="↻", 
+                    command=self.reset,
+                    activebackground="red", 
+                    activeforeground="red",
+                    bd=3,
+                    bg="red",
+                    cursor="hand2",
+                    disabledforeground="red",
+                    fg="black",
+                    font=("Arial", 15),
+                    height=1,
+                    highlightbackground="red",
+                    highlightcolor="white",
+                    highlightthickness=2,
+                    justify="left",
+                    overrelief="raised",
+                    padx=10,
+                    pady=20,
+                    width=10,
+                    wraplength=100)
+            self.reset.grid(column=3, row=3) 
         else:
                     
         
         
             pygame.init()
-            pygame.mixer.music.load("20187-Trumpet-21_Bb_BPM_135.wav")
+            pygame.mixer.music.load("/home/loopyloops/Documents/A.O.S/Real_Order_system/20187-Trumpet-21_Bb_BPM_135.wav")
             pygame.mixer.music.play()
             self.timesverificationwassent = 0
             self.pos = pos
             row_pos = int(pos / 5)
-            print("button made for order" + str(pos))
+            
             self.frame = tk.Frame(borderwidth=2, relief="groove")
             self.frame.pack(padx=10, pady=20)
         
@@ -149,7 +175,7 @@ class make_button:
             self.delete.grid(column=pos - 1, row=row_pos)
             
             self.verify = tk.Button( self.frame,
-                        text=f'📩', 
+                        text=f'◛', 
                         command=self.send_verifcation,
                         activebackground="green", 
                         activeforeground="green",
@@ -178,14 +204,18 @@ class make_button:
         
         
     def button_clicked(self):
+        
        
-        with open(f'orders/order{self.pos}.txt',"r") as file:
+        with open(f'/home/loopyloops/Documents/A.O.S/Real_Order_system/orders/order{self.pos}.txt',"r") as file:
             info = file.read()
         messagebox.showinfo("Order Details", info)
         
     def delete_button(self):
         response = messagebox.askyesnocancel("Warning!!", "Are you sure you wanna delete this?")
         doublecheck = messagebox.askyesnocancel("Confrim", "click yes to confirm")
+        xfile = f'/home/loopyloops/Documents/A.O.S/Real_Order_system/orders/order{self.pos}.txt'
+        if os.path.exists(xfile):
+            os.remove(xfile)
         if response and doublecheck:
             self.verify.destroy()
             self.delete.destroy()
@@ -195,7 +225,7 @@ class make_button:
             return
     
     def send_verifcation(self):
-        with open(f'orders/order{self.pos}.txt',"r") as file:
+        with open(f'/home/loopyloops/Documents/A.O.S/Real_Order_system/orders/order{self.pos}.txt',"r") as file:
             Gmail = file.read().split("\n")
             
         if self.timesverificationwassent == 0:
@@ -210,41 +240,56 @@ class make_button:
     
 
     def send_email(self, recipients, waittime):
-        print("sending email")
+        
         subject = "Order being processed!!"
-        body = f"Thank you for ordering at Anitas Mexican restaurants! Food has been recieved and we estimate a wait time of {waittime} minues."
+        body = f"Thank you for ordering at Anitas Mexican restaurants! Food has been recieved and we estimate a wait time of {waittime} minutes."
 
         message = f"Subject: {subject}\n\n{body}"
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
             smtp_server.login("anitasmexicanrestaurants@gmail.com", "qsjd fxss uoml tjnt")
             smtp_server.sendmail("anitasmexicanrestaurants@gmail.com", recipients, msg=message)
-        print("Message sent!")             
+                 
         #messagebox.showinfo("Order Details", info)
     
     def regester(self):
-        while True:
-            Name = simpledialog.askstring(title="Name",
-                                    prompt="Enter your Name")
-            
-            newID = simpledialog.askstring(title="New ID",
-                                    prompt="Enter your employee ID")
-            
-            if(newID.isalpha()):
-                messagebox.showerror("NO LETTERS!","Try again, only use numbers")
-                return
-            
-            
-            file_path = Path(f'Tracker/{newID}')
-    
-            if file_path.exists():
-                messagebox.showerror("Error", f'This ID combination has already been used')
+        global midsession
+        if not midsession:
+            midsession = True
+            while True:
+                Name = simpledialog.askstring(title="Name",
+                                        prompt="Enter your Name")
                 
+                if Name:
+                    newID = simpledialog.askstring(title="New ID",
+                                        prompt="Enter your employee ID")
+                    
+                
+                try:
+                    if(newID.isalpha()):
+                        box = messagebox.showerror("NO LETTERS!","Try again, only use numbers")
+                        midsession = False 
+                        break
+                except:
+                    midsession = False 
+                    break
+                
+                
+                file_path = Path(f'/home/loopyloops/Documents/A.O.S/Real_Order_system/Tracker/{newID}.txt')
+        
+                if file_path.exists():
+                    messagebox.showerror("Error", f'This ID combination has already been used')
+                    midsession = False 
+                    break
+                    
 
-            else:
-                messagebox.showinfo('Good job', 'Process completed!')
+                else:
+                    messagebox.showinfo('Good job', 'Process completed!')
 
-                with open(file_path,"w") as file:
-                    file.write(f'Name:{Name}, ID:{newID}\n\n')
+                    with open(file_path,"w") as file:
+                        file.write(f'Name={Name}, ID={newID}\n\n')
+                    midsession = False    
+                    break
+            
 
                
         
@@ -255,10 +300,10 @@ class make_button:
         ID = simpledialog.askstring(title="System",
                                 prompt="Enter your employee ID")
         
-        file_path = Path(f'Tracker/{ID}')
+        file_path = Path(f'/home/loopyloops/Documents/A.O.S/Real_Order_system/Tracker/{ID}.txt')
     
         if file_path.exists():
-            
+            rtime = dt.datetime.now().strftime("%I:%M %p")
             time = dt.datetime.now().strftime("%I:%M %p")
          
             now = datetime.now()
@@ -273,7 +318,41 @@ class make_button:
 
                 with open(file_path,"w") as file:
                     file.write(oldinfo)
-                    file.write(f'Clocked out-{time}\n{month_name} {day_of_month}\n------------------------------------')
+                    x1 = oldinfo.split("\n")[-2].split("-")[1]
+                    
+                  
+                    times = [x1,time]
+                    
+                    for time in range(0,2):
+                     
+                        if times[time].split(" ")[1] == "PM":
+                            
+                            addon = 12
+                
+                        else:
+                           
+                            addon = 0
+                            
+                            
+                        hour = str(int(times[time].split(":")[0]) + addon)
+                        minutes = times[time].split(":")[1].split(" ")[0]
+                        total = int(hour) * 60 + int(minutes)
+                        times[time] = total
+                       
+                     
+                    addedtime = round((times[1] - times[0]) / 60,2)
+                    try:
+                        oldtotal = oldinfo.split("\n")
+                        #print(oldtotal[len(oldtotal)-4])
+                        oldtotal = float(oldtotal[len(oldtotal)-4].split(":")[-1])
+                       
+                    except:
+                        
+                        oldtotal = 0
+                    file.write(f'Clocked out-{rtime}\n{month_name} {day_of_month},Hours:{addedtime}\ntotal hours:{round((oldtotal + addedtime),2)} \n------------------------------------')
+                   
+                                           
+                   
                 self.Clocked.remove(ID)
             
             else:
@@ -281,55 +360,79 @@ class make_button:
                 with open(file_path,"r") as file:
                     oldinfo = file.read()
 
-                days = int((len(oldinfo.split("\n")) - 2) / 5)
-                days += 1
-                if days > 7:
-                    oldinfo = oldinfo.split("\n")[0] + "\n"
-                    messagebox.showinfo('WOW', 'Account logs max reached... deleting old logs')
-                    days = 1
+               
+                
 
 
                 with open(file_path,"w") as file:
                     file.write(oldinfo)
-                    file.write(f'\nlog #{days}\nClocked in-{time}\n')
+                    file.write(f'\nClocked in-{time}\n')
                 messagebox.showinfo('Hello!', 'succesfully clocked in')
                 self.Clocked.append(ID)
         
         else:
             messagebox.showerror("Error", f'This ID does not exist')
 
+    def reset(self):
+        Pass = simpledialog.askstring(title="System",
+                                prompt="Enter Admin password")
+        
+        if Pass == "2025":
+            for x in range(0,25):
+                ID_path = f'/home/loopyloops/Documents/A.O.S/Real_Order_system/Tracker/{x}.txt'
+                if os.path.exists(ID_path):
+                        
+                    with open(ID_path,"r") as file:
+                        title = file.read().split("\n")[0]
+                            
+                    with open(ID_path,"w") as file:
+                            
+                        file.write(f'{title}\n')
+            messagebox.showinfo("System","All LOGS deleted")
+        else:
+            messagebox.showerror("nuh uh","Wrong password")
+                
+        
 
 
     def checklogs(self):
         ID = simpledialog.askstring(title="System",
                                 prompt="Enter employee ID")
         
-        file_path = Path(f'Tracker/{ID}')
+        file_path = Path(f'/home/loopyloops/Documents/A.O.S/Real_Order_system/Tracker/{ID}.txt')
         if(file_path.exists()):
-            with open(file_path,"r") as file:
-                oldinfo = file.read()
-
-            
+            self.show_log_box(file_path)
         
-            messagebox.showinfo(f'#{ID} Logs', oldinfo)
-            
-
-            
-        
-
         else:
             messagebox.showerror("Error", f'This ID does not exist')
 
 
-    def show_log_box(self,info):
-        text_area = scrolledtext.ScrolledText(self.root, wrap="word", width=40, height=10)
-        text_area.grid(column=0,row=0)
-        text_area.insert(tk.INSERT, info)
-
-        text_area.config(state=tk.DISABLED)
-
-
+    def show_log_box(self,filename):
         
+        # Create the main window
+        root = tk.Tk()
+        root.title("Text File Viewer")
+
+        # Create a ScrolledText widget for a scrollable text area
+        text_area = ScrolledText(root, wrap=tk.WORD, width=80, height=20)
+        text_area.pack(expand=True, fill="both")
+
+        try:
+            # Open and read the text file
+            with open(filename, "r") as file:
+                content = file.read()
+            # Insert the content into the text area
+            text_area.insert("1.0", content)
+        except Exception as e:
+            text_area.insert("1.0", f"Error opening file: {e}")
+
+        # Set the widget to read-only
+        text_area.config(state="disabled")
+
+        # Start the Tkinter main loop
+        root.mainloop()
+
+            
         
         
 
