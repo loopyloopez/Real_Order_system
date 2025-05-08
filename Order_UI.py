@@ -43,12 +43,15 @@ if day == "Friday":
                         file.write(f'{title}\n')
                         
     writetoweek()
+    
+    
+   
     """
     
 
 # Get the root window of Tkinter, the GUI backend for turtle
 window = tk.Tk()
-window.attributes('-zoomed', True)
+window.attributes('-fullscreen', True)
 window.title("ORDERS")
 
 buttonsmade = 0
@@ -79,7 +82,7 @@ def check():
                
                 print(f'order {file} has no button..making button')
                 try:
-                    with open(f'/home/loopyloops/Documents/A.O.S/Real_Order_system/orders/order{file}.txt',"r") as txt:
+                    with open(f'/home/loopyloops/Documents/A.O.S/Real_Order_system/order{file}.txt',"r") as txt:
                         print(f'found order {file}')
                         Buttons.make_button(file,root=window)
                         print("button made succesfully")

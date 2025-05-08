@@ -14,7 +14,7 @@ midsession = False
 class make_button:
     def __init__(self, pos,root):
         self.root = root
-        self.Clocked = []
+        
         if pos == 0:
             self.frame = tk.Frame(borderwidth=2, relief="groove")
             self.frame.pack(padx=20, pady=20)
@@ -42,7 +42,7 @@ class make_button:
             self.s.grid(column=0, row=3) 
 
             self.sys = tk.Button( self.frame,
-                    text='✍️', 
+                    text='ENTER', 
                     command=self.clock,
                     activebackground="pink", 
                     activeforeground="pink",
@@ -63,6 +63,28 @@ class make_button:
                     width=10,
                     wraplength=100)
             self.sys.grid(column=1, row=3,rowspan=3) 
+            self.syss = tk.Button( self.frame,
+                    text='LEAVE', 
+                    command=self.clockout,
+                    activebackground="blue", 
+                    activeforeground="blue",
+                    bd=3,
+                    bg="blue",
+                    cursor="hand2",
+                    disabledforeground="blue",
+                    fg="blue",
+                    font=("Arial", 15),
+                    height=1,
+                    highlightbackground="blue",
+                    highlightcolor="white",
+                    highlightthickness=2,
+                    justify="left",
+                    overrelief="raised",
+                    padx=15,
+                    pady=20,
+                    width=10,
+                    wraplength=100)
+            self.syss.grid(column=2, row=3,rowspan=3) 
 
 
             self.logs = tk.Button( self.frame,
@@ -86,7 +108,7 @@ class make_button:
                     pady=20,
                     width=10,
                     wraplength=100)
-            self.logs.grid(column=2, row=3) 
+            self.logs.grid(column=3, row=3) 
             
             self.reset = tk.Button( self.frame,
                     text="↻", 
@@ -109,7 +131,7 @@ class make_button:
                     pady=20,
                     width=10,
                     wraplength=100)
-            self.reset.grid(column=3, row=3) 
+            self.reset.grid(column=4, row=3) 
         else:
                     
         
@@ -303,75 +325,100 @@ class make_button:
         file_path = Path(f'/home/loopyloops/Documents/A.O.S/Real_Order_system/Tracker/{ID}.txt')
     
         if file_path.exists():
-            rtime = dt.datetime.now().strftime("%I:%M %p")
+           
             time = dt.datetime.now().strftime("%I:%M %p")
          
-            now = datetime.now()
-            month_name = now.strftime("%B")
-            day_of_month = now.strftime("%d")
             
-            if ID in self.Clocked:
-                messagebox.showinfo('Good Bye', 'succesfully clocked out')
-                with open(file_path,"r") as file:
-                    oldinfo = file.read()
+            
+            
+           
                    
-
-                with open(file_path,"w") as file:
-                    file.write(oldinfo)
-                    x1 = oldinfo.split("\n")[-2].split("-")[1]
-                    
-                  
-                    times = [x1,time]
-                    
-                    for time in range(0,2):
-                     
-                        if times[time].split(" ")[1] == "PM":
-                            
-                            addon = 12
+                          
+            with open(file_path,"r") as file:
+                oldinfo = file.read()
                 
-                        else:
-                           
-                            addon = 0
-                            
-                            
-                        hour = str(int(times[time].split(":")[0]) + addon)
-                        minutes = times[time].split(":")[1].split(" ")[0]
-                        total = int(hour) * 60 + int(minutes)
-                        times[time] = total
-                       
-                     
-                    addedtime = round((times[1] - times[0]) / 60,2)
-                    try:
-                        oldtotal = oldinfo.split("\n")
-                        #print(oldtotal[len(oldtotal)-4])
-                        oldtotal = float(oldtotal[len(oldtotal)-4].split(":")[-1])
-                       
-                    except:
-                        
-                        oldtotal = 0
-                    file.write(f'Clocked out-{rtime}\n{month_name} {day_of_month},Hours:{addedtime}\ntotal hours:{round((oldtotal + addedtime),2)} \n------------------------------------')
-                   
-                                           
-                   
-                self.Clocked.remove(ID)
-            
-            else:
-              
-                with open(file_path,"r") as file:
-                    oldinfo = file.read()
+            if(oldinfo.split("\n")[-2][8:10] == "in"):
+                messagebox.showinfo('', 'You already clocked in bruh')
+                return
+                
 
                
                 
 
 
-                with open(file_path,"w") as file:
-                    file.write(oldinfo)
-                    file.write(f'\nClocked in-{time}\n')
-                messagebox.showinfo('Hello!', 'succesfully clocked in')
-                self.Clocked.append(ID)
+            with open(file_path,"w") as file:
+                file.write(oldinfo)
+                file.write(f'\nClocked in-{time}\n')
+            messagebox.showinfo('Hello!', 'succesfully clocked in')
+               
         
         else:
             messagebox.showerror("Error", f'This ID does not exist')
+    def clockout(self):
+        ID = simpledialog.askstring(title="System",
+                                prompt="Enter your employee ID")
+        
+        file_path = Path(f'/home/loopyloops/Documents/A.O.S/Real_Order_system/Tracker/{ID}.txt')
+        if file_path.exists():
+            with open(file_path,"r") as file:
+                oldinfo = file.read()
+            
+            if(oldinfo.split("\n")[-2][8:10] != "in"):
+                messagebox.showinfo('', 'You forgot to clock in')
+                return
+            
+            rtime = dt.datetime.now().strftime("%I:%M %p")
+            time = dt.datetime.now().strftime("%I:%M %p")
+            
+            now = datetime.now()
+            month_name = now.strftime("%B")
+            day_of_month = now.strftime("%d")
+            messagebox.showinfo('Good Bye', 'succesfully clocked out')
+            
+                   
+
+            with open(file_path,"w") as file:
+                file.write(oldinfo)
+                x1 = oldinfo.split("\n")[-2].split("-")[1]
+                    
+                  
+                times = [x1,time]
+                    
+                for time in range(0,2):
+                     
+                    if times[time].split(" ")[1] == "PM":
+                            
+                        addon = 12
+                
+                    else:
+                           
+                        addon = 0
+                            
+                            
+                    hour = str(int(times[time].split(":")[0]) + addon)
+                    minutes = times[time].split(":")[1].split(" ")[0]
+                    total = int(hour) * 60 + int(minutes)
+                    times[time] = total
+                       
+                    
+                addedtime = round((times[1] - times[0]) / 60,2)
+                try:
+                    oldtotal = oldinfo.split("\n")
+                        #print(oldtotal[len(oldtotal)-4])
+                    oldtotal = float(oldtotal[len(oldtotal)-4].split(":")[-1])
+                       
+                except:       
+                    oldtotal = 0
+                    
+                    
+                file.write(f'Clocked out-{rtime}\n{month_name} {day_of_month},Hours:{addedtime}\ntotal hours:{round((oldtotal + addedtime),2)} \n------------------------------------')
+                   
+                                           
+                   
+                
+        else:
+            messagebox.showerror("Error", f'This ID does not exist')
+        
 
     def reset(self):
         Pass = simpledialog.askstring(title="System",
